@@ -1,18 +1,17 @@
 package um.edu.uy.entities;
 
-import java.util.ArrayList;
-import java.util.List;
+import um.edu.uy.tads.linkedlist.*;
 import java.util.Objects;
 
 public class Actor {
     private int id;
     private String nombre;
-    private List<Integer> peliculas;
+    private MyList<Integer> peliculas;
 
-    public Actor(int id, String nombre, List<Integer> peliculas) {
+    public Actor(int id, String nombre, MyList<Integer> peliculas) {
         this.id = id;
         this.nombre = nombre;
-        this.peliculas = new ArrayList<>();
+        this.peliculas = new MyLinkedListImpl<>();
     }
 
     public Actor() {}
@@ -33,11 +32,11 @@ public class Actor {
         this.nombre = nombre;
     }
 
-    public List<Integer> getPeliculas() {
+    public MyList<Integer> getPeliculas() {
         return peliculas;
     }
 
-    public void setPeliculas(List<Integer> peliculas) {
+    public void setPeliculas(MyList<Integer> peliculas) {
         this.peliculas = peliculas;
     }
 

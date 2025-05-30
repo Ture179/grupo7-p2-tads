@@ -1,7 +1,8 @@
 package um.edu.uy.entities;
 
-import java.util.ArrayList;
-import java.util.List;
+import um.edu.uy.tads.linkedlist.MyLinkedListImpl;
+import um.edu.uy.tads.linkedlist.MyList;
+
 import java.util.Objects;
 
 public class Pelicula {
@@ -11,18 +12,18 @@ public class Pelicula {
     private long ingresos;
     private int idDirector;
     private int idColeccion;
-    private List<Integer> actores;
-    private List<Integer> generos;
+    private MyList<Integer> actores;
+    private MyList<Integer> generos;
 
-    public Pelicula(int id, String titulo, String idomaOriginal, long ingresos, int idDirector, int idColeccion, List<Integer> actores, List<Integer> generos) {
+    public Pelicula(int id, String titulo, String idomaOriginal, long ingresos, int idDirector, int idColeccion, MyList<Integer> actores, MyList<Integer> generos) {
         this.id = id;
         this.titulo = titulo;
         this.idomaOriginal = idomaOriginal;
         this.ingresos = ingresos;
         this.idDirector = idDirector;
         this.idColeccion = idColeccion;
-        this.actores = new ArrayList<>();
-        this.generos = new ArrayList<>();
+        this.actores = new MyLinkedListImpl<>();
+        this.generos = new MyLinkedListImpl<>();
     }
 
     public Pelicula() {}
@@ -75,19 +76,19 @@ public class Pelicula {
         this.idColeccion = idColeccion;
     }
 
-    public List<Integer> getActores() {
+    public MyList<Integer> getActores() {
         return actores;
     }
 
-    public void setActores(List<Integer> actores) {
+    public void setActores(MyList<Integer> actores) {
         this.actores = actores;
     }
 
-    public List<Integer> getGeneros() {
+    public MyList<Integer> getGeneros() {
         return generos;
     }
 
-    public void setGeneros(List<Integer> generos) {
+    public void setGeneros(MyList<Integer> generos) {
         this.generos = generos;
     }
 

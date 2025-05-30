@@ -1,18 +1,19 @@
 package um.edu.uy.entities;
 
-import java.util.ArrayList;
-import java.util.List;
+import um.edu.uy.tads.linkedlist.MyLinkedListImpl;
+import um.edu.uy.tads.linkedlist.MyList;
+
 import java.util.Objects;
 
 public class Genero {
     private int id;
     private String nombre;
-    private List<Integer> peliculas;
+    private MyList<Integer> peliculas;
 
-    public Genero(int id, String nombre, List<Integer> peliculas) {
+    public Genero(int id, String nombre, MyList<Integer> peliculas) {
         this.id = id;
         this.nombre = nombre;
-        this.peliculas = new ArrayList<>();
+        this.peliculas = new MyLinkedListImpl<>();
     }
 
     public Genero() {}
@@ -33,11 +34,11 @@ public class Genero {
         this.nombre = nombre;
     }
 
-    public List<Integer> getPeliculas() {
+    public MyList<Integer> getPeliculas() {
         return peliculas;
     }
 
-    public void setPeliculas(List<Integer> peliculas) {
+    public void setPeliculas(MyList<Integer> peliculas) {
         this.peliculas = peliculas;
     }
 
