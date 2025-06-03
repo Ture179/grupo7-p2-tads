@@ -23,7 +23,7 @@ public class MyHashTableImpl<K,V> implements MyHashTable<K,V> {
     private int tamano;
 
     public MyHashTableImpl() {
-        this.capacidad = 1000003;
+        this.capacidad = 1000000;
         this.tamano = 0;
         this.tabla = new MyList[capacidad];
         for (int i = 0; i < capacidad; i++) {
@@ -44,7 +44,7 @@ public class MyHashTableImpl<K,V> implements MyHashTable<K,V> {
         for (int i = 0; i < lista.size(); i++) {
             Entrada<K, V> entrada = lista.get(i);
             if (entrada.clave.equals(clave)) {
-                throw new ElementoYaExistente("La clave ya existe.");
+                    throw new ElementoYaExistente("La clave ya existe.");
             }
         }
 
