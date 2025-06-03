@@ -10,19 +10,25 @@ public class MyHashTableImpl<K,V> implements MyHashTable<K,V> {
         K clave;
         V valor;
 
+
         public Entrada(K clave, V valor) {
             this.clave = clave;
             this.valor = valor;
+
         }
     }
 
     private MyList<Entrada<K,V>>[] tabla;
-    private int tamano = 1000000;
+    private int capacidad;
+    private int tamano;
 
     public MyHashTableImpl() {
-        this.tabla = new MyList[tamano];
-        for (int i = 0; i < tamano; i++) {
+        this.capacidad = capacidad;
+        this.tamano = 0;
+        this.tabla = new MyList[capacidad];
+        for (int i = 0; i < capacidad; i++) {
             tabla[i] = new MyLinkedListImpl<>();
+            tamano++;
         }
     }
 
@@ -40,7 +46,7 @@ public class MyHashTableImpl<K,V> implements MyHashTable<K,V> {
         for (int i = 0; i < lista.size(); i++) {
             Entrada<K, V> entrada = lista.get(i);
             if (entrada.clave.equals(clave)) {
-                throw new ElementoYaExistente("La clave '" + clave + "' ya existe.");
+                throw new ElementoYaExistente("La clave ya existe.");
             }
         }
 
@@ -52,16 +58,43 @@ public class MyHashTableImpl<K,V> implements MyHashTable<K,V> {
 
     @Override
     public boolean contieneClave(K clave) {
-        return false;
+        return obtener(clave) != null;
     }
 
     @Override
     public V obtener(K clave) {
+        int index = hash(clave);
+        MyList<Entrada<K, V>> bucket = tabla[index];
+
+        for (int i = 0; i < bucket.size(); i++) {
+            Entrada<K, V> entrada = bucket.get(i);
+            if (entrada.clave.equals(clave)) {
+                return entrada.valor;
+            }
+        }
+
         return null;
     }
 
     @Override
     public void borrar(K clave) {
 
+        int indice = hash(clave);
+        MyList<Entrada<K, V>> bucket = tabla[indice];
+
+        for (int i = 0; i < bucket.size(); i++) {
+            Entrada<K, V> entrada = bucket.get(i);
+            if (entrada.clave.equals(clave)) {
+                bucket.remove(entrada);
+                tamano--;
+                return;
+            }
+        }
+
+    }
+
+    @Override
+    public int size() {
+        return tamano;
     }
 }

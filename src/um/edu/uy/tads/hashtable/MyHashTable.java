@@ -11,4 +11,6 @@ public interface MyHashTable<K, V> {
     V obtener(K clave);
 
     void borrar(K clave);
+
+    int size();
 }
