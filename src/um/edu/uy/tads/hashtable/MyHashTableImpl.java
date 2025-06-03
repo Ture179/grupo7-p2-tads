@@ -23,18 +23,16 @@ public class MyHashTableImpl<K,V> implements MyHashTable<K,V> {
     private int tamano;
 
     public MyHashTableImpl() {
-        this.capacidad = capacidad;
+        this.capacidad = 1000003;
         this.tamano = 0;
         this.tabla = new MyList[capacidad];
         for (int i = 0; i < capacidad; i++) {
             tabla[i] = new MyLinkedListImpl<>();
-            tamano++;
         }
     }
 
     private int hash(K clave) {
-        int codigoHash = clave.hashCode();
-        return codigoHash % tabla.length;
+        return Math.abs(clave.hashCode()) % capacidad;
     }
 
     @Override
@@ -51,9 +49,7 @@ public class MyHashTableImpl<K,V> implements MyHashTable<K,V> {
         }
 
         lista.add(new Entrada<>(clave, valor));
-
-
-
+        tamano++;
     }
 
     @Override

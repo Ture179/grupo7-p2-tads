@@ -15,14 +15,12 @@ import java.io.IOException;
 public class CargadorDatos {
 
     public void cargarPeliculasDesdeCSV(String path, MyHashTable<Integer, Pelicula> peliculas, MyHashTable<Integer, Genero> generos, MyHashTable<Integer, Coleccion> colecciones) {
-        int contador = 0;
 
         try (BufferedReader br = new BufferedReader(new FileReader(path))) {
-            String linea = br.readLine();
+            String linea = br.readLine(); // Saltear encabezado
 
             while ((linea = br.readLine()) != null) {
                 String[] columnas = linea.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
-
                 if (columnas.length < 19) continue;
 
                 try {
@@ -37,7 +35,7 @@ public class CargadorDatos {
                     p.setIdomaOriginal(idioma);
                     p.setIngresos(ingresos);
 
-                    // --- Generos ---
+                    // --- Géneros ---
                     String generoJson = columnas[3].trim();
                     if (!generoJson.isEmpty() && generoJson.startsWith("[")) {
                         JSONArray array = new JSONArray(generoJson.replace("'", "\""));
@@ -58,7 +56,7 @@ public class CargadorDatos {
                         }
                     }
 
-                    // --- Coleccion ---
+                    // --- Colección ---
                     String coleccionJson = columnas[1].trim();
                     if (!coleccionJson.isEmpty() && coleccionJson.startsWith("{")) {
                         JSONObject obj = new JSONObject(coleccionJson.replace("'", "\""));
@@ -76,18 +74,15 @@ public class CargadorDatos {
                         p.setIdColeccion(idColeccion);
                     }
 
-
                     peliculas.insertar(id, p);
-                    contador++;
 
                 } catch (NumberFormatException | ElementoYaExistente e) {
                     continue;
                 }
-
-
             }
 
-            System.out.println("Películas cargadas: " + contador);
+            // ✅ Reportar cantidad usando size()
+            System.out.println("Películas cargadas: " + peliculas.size());
 
         } catch (IOException e) {
             System.out.println("Error al leer el archivo: " + e.getMessage());
