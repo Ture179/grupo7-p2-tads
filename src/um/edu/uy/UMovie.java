@@ -1,14 +1,15 @@
 package um.edu.uy;
 
 import um.edu.uy.entities.*;
+import um.edu.uy.tads.hashtable.MyHashTable;
 
 public class UMovie {
-    private HashTable<Integer, Pelicula> peliculas;
-    private HashTable<Integer, Genero> generos;
-    private HashTable<Integer, Coleccion> colecciones;
-    private HashTable<Integer, Actor> actores;
-    private HashTable<Integer, Director> directores;
-    private HashTable<Integer, Usuario> usuarios;
+    private MyHashTable<Integer, Pelicula> peliculas;
+    private MyHashTable<Integer, Genero> generos;
+    private MyHashTable<Integer, Coleccion> colecciones;
+    private MyHashTable<Integer, Actor> actores;
+    private MyHashTable<Integer, Director> directores;
+    private MyHashTable<Integer, Usuario> usuarios;
 
 
 }
