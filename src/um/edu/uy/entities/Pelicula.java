@@ -26,7 +26,10 @@ public class Pelicula {
         this.generos = new MyLinkedListImpl<>();
     }
 
-    public Pelicula() {}
+    public Pelicula() {
+        this.actores = new MyLinkedListImpl<>();
+        this.generos = new MyLinkedListImpl<>();
+    }
 
     public int getId() {
         return id;
