@@ -43,8 +43,7 @@ public class CargadorDatos {
                     try {
                         String generoJson = columnas[3].trim();
                         if (!generoJson.isEmpty() && generoJson.startsWith("[")) {
-                            generoJson = generoJson.replace("'", "\"");
-
+                            generoJson = sanitizeJson(generoJson);
                             JSONArray array = new JSONArray(generoJson);
                             for (int i = 0; i < array.length(); i++) {
                                 JSONObject obj = array.getJSONObject(i);
@@ -66,8 +65,7 @@ public class CargadorDatos {
                     try {
                         String coleccionJson = columnas[1].trim();
                         if (!coleccionJson.isEmpty() && coleccionJson.startsWith("{")) {
-                            coleccionJson = coleccionJson.replace("'", "\"");
-
+                            coleccionJson = sanitizeJson(coleccionJson);
                             JSONObject obj = new JSONObject(coleccionJson);
                             int idColeccion = obj.getInt("id");
                             String nombre = obj.getString("name");
@@ -89,15 +87,13 @@ public class CargadorDatos {
         } catch (Exception ignored) {}
     }
 
+
     public void cargarCreditosDesdeCSV(String path,
                                        MyHashTable<Integer, Pelicula> peliculas,
                                        MyHashTable<Integer, Actor> actores,
                                        MyHashTable<Integer, Director> directores) {
 
         int contadorCreditos = 0;
-        int contadorSinPelicula = 0;
-        int contadorErrores = 0;
-        int contadorSinCastYCrew = 0;
 
         try {
             CSVReader reader = new CSVReader(new FileReader(path));
@@ -114,19 +110,14 @@ public class CargadorDatos {
                     int idPelicula = Integer.parseInt(columnas[2].trim());
                     Pelicula peli = peliculas.obtener(idPelicula);
                     if (peli == null) {
-                        contadorSinPelicula++;
                         continue;
                     }
-
-                    boolean tieneCast = false;
-                    boolean tieneCrew = false;
 
                     // Cast
                     if (!castJsonCrudo.isEmpty() && castJsonCrudo.startsWith("[")) {
                         try {
                             String castJson = sanitizeJson(castJsonCrudo);
                             JSONArray castArray = new JSONArray(castJson);
-                            tieneCast = castArray.length() > 0;
 
                             for (int i = 0; i < castArray.length(); i++) {
                                 JSONObject obj = castArray.getJSONObject(i);
@@ -154,7 +145,6 @@ public class CargadorDatos {
                         try {
                             String crewJson = sanitizeJson(crewJsonCrudo);
                             JSONArray crewArray = new JSONArray(crewJson);
-                            tieneCrew = crewArray.length() > 0;
 
                             for (int i = 0; i < crewArray.length(); i++) {
                                 JSONObject obj = crewArray.getJSONObject(i);
@@ -180,35 +170,17 @@ public class CargadorDatos {
                             throw new RuntimeException("Error en crewJson: " + crewJsonCrudo);
                         }
                     }
-
-                    if (!tieneCast && !tieneCrew) {
-                        contadorSinCastYCrew++;
-                    }
-
                     contadorCreditos++;
 
-                } catch (Exception e) {
-                    contadorErrores++;
-                    try {
-                        System.out.println("❌ Error JSON en película ID: " + columnas[2].trim());
-                    } catch (Exception inner) {
-                        System.out.println("❌ Error JSON en fila sin ID válido");
-                    }
-                    System.out.println("   ↳ castJson crudo: " + castJsonCrudo);
-                    System.out.println("   ↳ crewJson crudo: " + crewJsonCrudo);
+                } catch (Exception ignored) {
                 }
             }
 
-        } catch (Exception e) {
-            System.out.println("❌ Error al leer el archivo de créditos: " + e.getMessage());
+        } catch (Exception ignored) {
         }
 
         this.creditosTotales = contadorCreditos;
 
-        System.out.println("🎞️ Créditos cargados (filas): " + contadorCreditos);
-        System.out.println("❌ Filas con ID de película no encontrada: " + contadorSinPelicula);
-        System.out.println("⚠️ Errores de parseo JSON: " + contadorErrores);
-        System.out.println("ℹ️ Filas sin cast y sin crew: " + contadorSinCastYCrew);
     }
 
 
