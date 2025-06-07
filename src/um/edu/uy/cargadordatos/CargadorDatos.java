@@ -1,23 +1,30 @@
 package um.edu.uy.cargadordatos;
 
+import com.opencsv.CSVReader;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 import um.edu.uy.entities.*;
-import um.edu.uy.exceptions.ElementoYaExistente;
 import um.edu.uy.tads.hashtable.MyHashTable;
-
-import java.io.BufferedReader;
+import um.edu.uy.tads.linkedlist.MyLinkedListImpl;
 import java.io.FileReader;
-import java.io.IOException;
 
 public class CargadorDatos {
 
-    public void cargarPeliculasDesdeCSV(String path, MyHashTable<Integer, Pelicula> peliculas, MyHashTable<Integer, Genero> generos, MyHashTable<Integer, Coleccion> colecciones) {
-        try (BufferedReader br = new BufferedReader(new FileReader(path))) {
-            String linea = br.readLine();
+    public void cargarPeliculasDesdeCSV(String path,
+                                        MyHashTable<Integer, Pelicula> peliculas,
+                                        MyHashTable<Integer, Genero> generos,
+                                        MyHashTable<Integer, Coleccion> colecciones) {
 
-            while ((linea = br.readLine()) != null) {
-                String[] columnas = linea.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
+        try {
+
+
+            CSVReader reader = new CSVReader(new FileReader(path));
+
+            String[] columnas;
+            reader.readNext(); // Encabezado
+
+            while ((columnas = reader.readNext()) != null) {
                 if (columnas.length < 19) continue;
 
                 try {
@@ -43,9 +50,7 @@ public class CargadorDatos {
 
                             Genero g = generos.obtener(idGenero);
                             if (g == null) {
-                                g = new Genero();
-                                g.setId(idGenero);
-                                g.setNombre(nombre);
+                                g = new Genero(idGenero, nombre, new MyLinkedListImpl<>());
                                 generos.insertar(idGenero, g);
                             }
                             g.agregarPelicula(id);
@@ -62,9 +67,7 @@ public class CargadorDatos {
 
                         Coleccion c = colecciones.obtener(idColeccion);
                         if (c == null) {
-                            c = new Coleccion();
-                            c.setId(idColeccion);
-                            c.setNombre(nombre);
+                            c = new Coleccion(idColeccion, nombre);
                             colecciones.insertar(idColeccion, c);
                         }
                         p.setIdColeccion(idColeccion);
@@ -72,14 +75,13 @@ public class CargadorDatos {
 
                     peliculas.insertar(id, p);
 
-                } catch (NumberFormatException | ElementoYaExistente e) {
-                    continue;
+                } catch (Exception e) {
                 }
             }
 
             System.out.println("Películas cargadas: " + peliculas.size());
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             System.out.println("Error al leer el archivo de películas: " + e.getMessage());
         }
     }
@@ -89,11 +91,15 @@ public class CargadorDatos {
                                        MyHashTable<Integer, Actor> actores) {
         int totalCreditos = 0;
 
-        try (BufferedReader br = new BufferedReader(new FileReader(path))) {
-            String linea = br.readLine(); // Saltar encabezado
+        try {
 
-            while ((linea = br.readLine()) != null) {
-                String[] columnas = linea.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
+
+            CSVReader reader = new CSVReader(new FileReader(path));
+
+            String[] columnas;
+            reader.readNext(); // Encabezado
+
+            while ((columnas = reader.readNext()) != null) {
                 if (columnas.length < 3) continue;
 
                 try {
@@ -139,14 +145,15 @@ public class CargadorDatos {
                     }
 
                 } catch (Exception e) {
-                    continue;
+                    // línea malformada, ignorar
                 }
             }
 
             System.out.println("Créditos cargados: " + totalCreditos);
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             System.out.println("Error al leer el archivo de créditos: " + e.getMessage());
         }
     }
 }
+
