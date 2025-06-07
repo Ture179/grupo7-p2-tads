@@ -13,10 +13,12 @@ public class Genero {
     public Genero(int id, String nombre, MyList<Integer> peliculas) {
         this.id = id;
         this.nombre = nombre;
-        this.peliculas = new MyLinkedListImpl<>();
+        this.peliculas = peliculas;
     }
 
-    public Genero() {}
+    public Genero() {
+        this.peliculas = new MyLinkedListImpl<>();
+    }
 
     public int getId() {
         return id;
