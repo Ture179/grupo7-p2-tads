@@ -12,4 +12,20 @@ public class UMovie {
     private MyHashTable<Integer, Usuario> usuarios;
 
 
+    public static void top5PeliculasPorIdioma(){
+
+        
+
+
+    }
+
+
+    public static void top10MejorCalificacionMedia(){
+
+
+    }
+
+
+
+
 }
