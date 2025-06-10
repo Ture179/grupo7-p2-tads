@@ -2,6 +2,7 @@ package um.edu.uy;
 
 import um.edu.uy.cargadordatos.CargadorDatos;
 import um.edu.uy.entities.*;
+import um.edu.uy.UMovie;
 import um.edu.uy.tads.hashtable.MyHashTable;
 import um.edu.uy.tads.hashtable.MyHashTableImpl;
 import um.edu.uy.tads.linkedlist.MyLinkedListImpl;
@@ -31,8 +32,18 @@ public class Main {
         cargador.cargarEvaluacionesDesdeCSV(pathRatings, evaluaciones, usuarios);
 
         cargador.imprimirResumen(peliculas, generos, colecciones, actores, directores, evaluaciones, idiomas, usuarios);
-
         long fin = System.currentTimeMillis();
         System.out.println("Carga completa en " + (fin - inicio) + " ms");
+
+        long inicio1 = System.currentTimeMillis();
+
+        UMovie app = new UMovie();
+        app.top5PeliculasPorIdioma(peliculas, evaluaciones);
+
+        long fin1 = System.currentTimeMillis();
+        System.out.println("Carga completa en " + (fin1 - inicio1) + " ms");
+
+
+
     }
 }

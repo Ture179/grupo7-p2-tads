@@ -176,7 +176,7 @@ public class CargadorDatos {
                                     directores.insertar(idDirector, director);
                                 }
 
-                                peli.setId(idDirector);
+                                peli.setIdDirector(idDirector);
                                 break;
                             }
                         } catch (Exception ignored) {}

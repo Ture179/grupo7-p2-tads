@@ -4,6 +4,9 @@ import um.edu.uy.exceptions.ElementoYaExistente;
 import um.edu.uy.tads.linkedlist.MyLinkedListImpl;
 import um.edu.uy.tads.linkedlist.MyList;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MyHashTableImpl<K,V> implements MyHashTable<K,V> {
 
     private static class Entrada<K,V>{
@@ -93,4 +96,16 @@ public class MyHashTableImpl<K,V> implements MyHashTable<K,V> {
     public int size() {
         return tamano;
     }
+
+    @Override
+    public List<V> obtenerElementos() {
+        List<V> elementos = new ArrayList<>();
+        for (MyList<Entrada<K, V>> bucket : tabla) {
+            for (int i = 0; i < bucket.size(); i++) {
+                elementos.add(bucket.get(i).valor);
+            }
+        }
+        return elementos;
+    }
+
 }
