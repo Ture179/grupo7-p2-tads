@@ -17,11 +17,6 @@ public class UMovie {
 
 
 
-    public static void top10MejorCalificacionMedia(){
-
-
-    }
-
 
     public static void top5PeliculasPorIdioma(
             MyHashTable<Integer, Pelicula> peliculas,
@@ -74,6 +69,13 @@ public class UMovie {
         }
     }
 
+
+    public static void top10MejorCalificacionMedia(){
+
+
+
+
+    }
 
 
 
