@@ -17,6 +17,8 @@ public class Main {
         MyHashTable<Integer, Actor> actores = new MyHashTableImpl<>();
         MyHashTable<Integer, Director> directores = new MyHashTableImpl<>();
         MyHashTable<Integer, Evaluacion> evaluaciones = new MyHashTableImpl<>();
+        MyHashTable<String, Boolean> idiomas = new MyHashTableImpl<>();
+        MyHashTable<Integer, Usuario> usuarios = new MyHashTableImpl<>();
 
 
         String pathPeliculas = "resources/movies_metadata.csv";
@@ -24,11 +26,11 @@ public class Main {
         String pathRatings = "resources/ratings_1mm.csv";
 
         CargadorDatos cargador = new CargadorDatos();
-        cargador.cargarPeliculasDesdeCSV(pathPeliculas, peliculas, generos, colecciones);
+        cargador.cargarPeliculasDesdeCSV(pathPeliculas, peliculas, generos, colecciones, idiomas);
         cargador.cargarCreditosDesdeCSV(pathCreditos, peliculas, actores, directores);
-        cargador.cargarEvaluacionesDesdeCSV(pathRatings, evaluaciones);
+        cargador.cargarEvaluacionesDesdeCSV(pathRatings, evaluaciones, usuarios);
 
-        cargador.imprimirResumen(peliculas, generos, colecciones, actores, directores, evaluaciones);
+        cargador.imprimirResumen(peliculas, generos, colecciones, actores, directores, evaluaciones, idiomas, usuarios);
 
         long fin = System.currentTimeMillis();
         System.out.println("Carga completa en " + (fin - inicio) + " ms");
