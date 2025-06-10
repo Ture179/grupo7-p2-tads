@@ -1,11 +1,11 @@
 package um.edu.uy;
 
 import um.edu.uy.entities.*;
+import um.edu.uy.tads.arraylist.MyArrayList;
+import um.edu.uy.tads.arraylist.MyArrayListImpl;
 import um.edu.uy.tads.hashtable.MyHashTable;
 import um.edu.uy.tads.hashtable.MyHashTableImpl;
 
-import java.util.ArrayList;
-import java.util.List;
 
 public class UMovie {
     private MyHashTable<Integer, Pelicula> peliculas;
@@ -48,11 +48,11 @@ public class UMovie {
 
         // Para cada idioma: obtener y mostrar top 5
         for (String idioma : idiomas) {
-            List<Pelicula> lista = new ArrayList<>();
+            MyArrayList<Pelicula> lista = new MyArrayListImpl<>();
 
             for (Pelicula p : peliculas.obtenerElementos()) {
                 if (idioma.equals(p.getIdomaOriginal())) {
-                    lista.add(p);
+                    lista.agregar(p);
                 }
             }
 
@@ -63,7 +63,7 @@ public class UMovie {
                 return Integer.compare(evalB, evalA);
             });
 
-            System.out.println("🌍 Top 5 películas en idioma: " + idioma.toUpperCase());
+            System.out.println("Top 5 películas en idioma: " + idioma.toUpperCase());
             for (int i = 0; i < Math.min(5, lista.size()); i++) {
                 Pelicula p = lista.get(i);
                 int cantidad = conteo.obtener(p.getId()) != null ? conteo.obtener(p.getId()) : 0;
