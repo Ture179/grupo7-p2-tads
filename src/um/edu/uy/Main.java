@@ -33,15 +33,23 @@ public class Main {
 
         cargador.imprimirResumen(peliculas, generos, colecciones, actores, directores, evaluaciones, idiomas, usuarios);
         long fin = System.currentTimeMillis();
-        System.out.println("Carga completa en " + (fin - inicio) + " ms");
+        System.out.println("Carga completa de los datos en " + (fin - inicio) + " ms");
 
-        long inicio1 = System.currentTimeMillis();
 
         UMovie app = new UMovie();
-        app.top5PeliculasPorIdioma(peliculas, evaluaciones);
 
+        long inicio1 = System.currentTimeMillis();
+        app.top5PeliculasPorIdioma(peliculas, evaluaciones);
         long fin1 = System.currentTimeMillis();
-        System.out.println("Carga completa en " + (fin1 - inicio1) + " ms");
+        System.out.println("Tiempo de ejecución de la consulta: " + (fin1 - inicio1) + " ms");
+
+        long inicio2 = System.currentTimeMillis();
+        app.top10MejorCalificacionMedia(peliculas, evaluaciones);
+        long fin2 = System.currentTimeMillis();
+        System.out.println("Tiempo de ejecución de la consulta: " + (fin2 - inicio2) + " ms");
+
+
+
 
 
 

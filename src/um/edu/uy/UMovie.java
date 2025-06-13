@@ -15,9 +15,8 @@ public class UMovie {
     private MyHashTable<Integer, Director> directores;
     private MyHashTable<Integer, Usuario> usuarios;
 
-    public static void top5PeliculasPorIdioma(
-            MyHashTable<Integer, Pelicula> peliculas,
-            MyHashTable<Integer, Evaluacion> evaluaciones) {
+    public static void top5PeliculasPorIdioma(MyHashTable<Integer, Pelicula> peliculas,
+                                              MyHashTable<Integer, Evaluacion> evaluaciones) {
 
         String[] idiomas = {"en", "fr", "it", "es", "pt"};
         MyHashTable<Integer, Integer> conteo = new MyHashTableImpl<>();
@@ -59,20 +58,68 @@ public class UMovie {
             for (int i = 0; i < Math.min(5, lista.size()); i++) {
                 Pelicula p = lista.get(i);
                 int cantidad = conteo.obtener(p.getId()) != null ? conteo.obtener(p.getId()) : 0;
-                System.out.printf(" ▶️ ID: %d | Título: %s | Evaluaciones: %d | Idioma: %s\n",
-                        p.getId(), p.getTitulo(), cantidad, p.getIdomaOriginal());
+                System.out.printf(" ▶️ ID: %d | Título: %s | Evaluaciones: %d | Idioma: %s\n", p.getId(), p.getTitulo(), cantidad, p.getIdomaOriginal());
             }
             System.out.println();
         }
     }
 
 
-    public static void top10MejorCalificacionMedia(){
+    public static void top10MejorCalificacionMedia(MyHashTable<Integer, Pelicula> peliculas,
+                                                   MyHashTable<Integer, Evaluacion> evaluaciones) {
 
+        MyHashTable<Integer, Double> sumas = new MyHashTableImpl<>();
+        MyHashTable<Integer, Integer> conteos = new MyHashTableImpl<>();
 
+        // Acumular sumas y conteos
+        for (Evaluacion e : evaluaciones.obtenerElementos()) {
+            int idPelicula = e.getId_pelicula();
+            double puntaje = e.getPuntaje();
 
+            Double sumaActual = sumas.obtener(idPelicula);
+            Integer cantidadActual = conteos.obtener(idPelicula);
 
+            try {
+                if (sumaActual == null) {
+                    sumas.insertar(idPelicula, puntaje);
+                    conteos.insertar(idPelicula, 1);
+                } else {
+                    sumas.borrar(idPelicula);
+                    conteos.borrar(idPelicula);
+                    sumas.insertar(idPelicula, sumaActual + puntaje);
+                    conteos.insertar(idPelicula, cantidadActual + 1);
+                }
+            } catch (Exception ignored) {}
+        }
+
+        // Crear lista de películas que tienen evaluaciones
+        MyArrayList<Pelicula> lista = new MyArrayListImpl<>();
+        for (Pelicula p : peliculas.obtenerElementos()) {
+            int id = p.getId();
+            if (sumas.contieneClave(id) && conteos.contieneClave(id)) {
+                lista.agregar(p);
+            }
+        }
+
+        // Ordenar por promedio descendente
+        lista.sort((a, b) -> {
+            double promA = sumas.obtener(a.getId()) / conteos.obtener(a.getId());
+            double promB = sumas.obtener(b.getId()) / conteos.obtener(b.getId());
+            return Double.compare(promB, promA);
+        });
+
+        // Imprimir top 10
+        System.out.println("Top 10 películas con mejor calificación media:");
+        for (int i = 0; i < Math.min(10, lista.size()); i++) {
+            Pelicula p = lista.get(i);
+            double promedio = sumas.obtener(p.getId()) / conteos.obtener(p.getId());
+            System.out.printf(" ▶️ ID: %d | Título: %s | Calificación media: %.2f\n", p.getId(), p.getTitulo(), promedio);
+        }
     }
+
+
+
+
 
 
 
