@@ -118,9 +118,51 @@ public class UMovie {
     }
 
 
+    public MyHashTable<Integer, Pelicula> getPeliculas() {
+        return peliculas;
+    }
 
+    public void setPeliculas(MyHashTable<Integer, Pelicula> peliculas) {
+        this.peliculas = peliculas;
+    }
 
+    public MyHashTable<Integer, Genero> getGeneros() {
+        return generos;
+    }
 
+    public void setGeneros(MyHashTable<Integer, Genero> generos) {
+        this.generos = generos;
+    }
 
+    public MyHashTable<Integer, Coleccion> getColecciones() {
+        return colecciones;
+    }
 
+    public void setColecciones(MyHashTable<Integer, Coleccion> colecciones) {
+        this.colecciones = colecciones;
+    }
+
+    public MyHashTable<Integer, Actor> getActores() {
+        return actores;
+    }
+
+    public void setActores(MyHashTable<Integer, Actor> actores) {
+        this.actores = actores;
+    }
+
+    public MyHashTable<Integer, Director> getDirectores() {
+        return directores;
+    }
+
+    public void setDirectores(MyHashTable<Integer, Director> directores) {
+        this.directores = directores;
+    }
+
+    public MyHashTable<Integer, Usuario> getUsuarios() {
+        return usuarios;
+    }
+
+    public void setUsuarios(MyHashTable<Integer, Usuario> usuarios) {
+        this.usuarios = usuarios;
+    }
 }
