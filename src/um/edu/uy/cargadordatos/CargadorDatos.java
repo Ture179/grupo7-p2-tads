@@ -88,10 +88,12 @@ public class CargadorDatos {
 
                             Coleccion c = colecciones.obtener(idColeccion);
                             if (c == null) {
-                                c = new Coleccion(idColeccion, nombre);
+                                c = new Coleccion(idColeccion, nombre, new MyLinkedListImpl<>());
                                 colecciones.insertar(idColeccion, c);
                             }
+                            c.getPeliculas().add(id);
                             p.setIdColeccion(idColeccion);
+
                         }
                     } catch (Exception ignored) {}
 

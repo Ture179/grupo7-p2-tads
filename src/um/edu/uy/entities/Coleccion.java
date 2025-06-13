@@ -1,17 +1,24 @@
 package um.edu.uy.entities;
 
+import um.edu.uy.tads.linkedlist.MyLinkedListImpl;
+import um.edu.uy.tads.linkedlist.MyList;
+
 import java.util.Objects;
 
 public class Coleccion {
     private int id;
     private String nombre;
+    private MyList<Integer> peliculas;
 
-    public Coleccion(int id, String nombre) {
+    public Coleccion(int id, String nombre, MyList<Integer> peliculas) {
         this.id = id;
         this.nombre = nombre;
+        this.peliculas = peliculas;
     }
 
-    public Coleccion() {}
+    public Coleccion() {
+        this.peliculas = new MyLinkedListImpl<>();
+    }
 
     public int getId() {
         return id;
@@ -27,6 +34,14 @@ public class Coleccion {
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
+    }
+
+    public MyList<Integer> getPeliculas() {
+        return peliculas;
+    }
+
+    public void setPeliculas(MyList<Integer> peliculas) {
+        this.peliculas = peliculas;
     }
 
     @Override
