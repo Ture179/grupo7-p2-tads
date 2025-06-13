@@ -5,19 +5,16 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import um.edu.uy.entities.*;
 import um.edu.uy.tads.hashtable.MyHashTable;
-import um.edu.uy.tads.hashtable.MyHashTableImpl;
 import um.edu.uy.tads.linkedlist.MyLinkedListImpl;
 
 import java.io.FileReader;
 
 public class CargadorDatos {
-    private int creditosTotales = 0;
 
     public void cargarPeliculasDesdeCSV(String path,
                                         MyHashTable<Integer, Pelicula> peliculas,
                                         MyHashTable<Integer, Genero> generos,
-                                        MyHashTable<Integer, Coleccion> colecciones,
-                                        MyHashTable<String, Boolean> idiomas) {
+                                        MyHashTable<Integer, Coleccion> colecciones) {
 
         try {
             CSVReader reader = new CSVReader(new FileReader(path));
@@ -44,17 +41,12 @@ public class CargadorDatos {
                     p.setIdomaOriginal(idioma);
                     p.setIngresos(ingresos);
 
-                    if (!idiomas.contieneClave(idioma)) {
-                        idiomas.insertar(idioma, true);
-                    }
 
                     // Géneros
                     try {
                         String generoJson = columnas[3].trim();
                         if (!generoJson.isEmpty() && generoJson.startsWith("[")) {
                             generoJson = sanitizeJson(generoJson);
-
-                            new JSONArray(generoJson);
 
                             JSONArray array = new JSONArray(generoJson);
                             for (int i = 0; i < array.length(); i++) {
@@ -79,8 +71,6 @@ public class CargadorDatos {
                         String coleccionJson = columnas[1].trim();
                         if (!coleccionJson.isEmpty() && coleccionJson.startsWith("{")) {
                             coleccionJson = sanitizeJson(coleccionJson);
-
-                            new JSONObject(coleccionJson);
 
                             JSONObject obj = new JSONObject(coleccionJson);
                             int idColeccion = obj.getInt("id");
@@ -110,8 +100,6 @@ public class CargadorDatos {
                                        MyHashTable<Integer, Pelicula> peliculas,
                                        MyHashTable<Integer, Actor> actores,
                                        MyHashTable<Integer, Director> directores) {
-
-        int contadorCreditos = 0;
 
         try {
             CSVReader reader = new CSVReader(new FileReader(path));
@@ -187,14 +175,11 @@ public class CargadorDatos {
                         } catch (Exception ignored) {}
                     }
 
-                    contadorCreditos++;
-
                 } catch (Exception ignored) {}
             }
 
         } catch (Exception ignored) {}
 
-        this.creditosTotales = contadorCreditos;
     }
 
 
@@ -245,17 +230,14 @@ public class CargadorDatos {
                                 MyHashTable<Integer, Actor> actores,
                                 MyHashTable<Integer, Director> directores,
                                 MyHashTable<Integer, Evaluacion> evaluaciones,
-                                MyHashTable<String, Boolean> idiomas,
                                 MyHashTable<Integer, Usuario> usuarios) {
 
         System.out.println("Películas cargadas: " + peliculas.size());
         System.out.println("Géneros diferentes: " + generos.size());
         System.out.println("Colecciones diferentes: " + colecciones.size());
-        System.out.println("Créditos cargados (filas): " + creditosTotales);
         System.out.println("Actores diferentes: " + actores.size());
         System.out.println("Directores diferentes: " + directores.size());
         System.out.println("Evaluaciones cargadas: " + evaluaciones.size());
-        System.out.println("Idiomas diferentes: " + idiomas.size());
         System.out.println("Usuarios únicos: " + usuarios.size());
     }
 

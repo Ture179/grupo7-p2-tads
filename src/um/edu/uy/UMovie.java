@@ -14,6 +14,7 @@ public class UMovie {
     private MyHashTable<Integer, Actor> actores;
     private MyHashTable<Integer, Director> directores;
     private MyHashTable<Integer, Usuario> usuarios;
+    private MyHashTable<Integer, Evaluacion> evaluaciones;
 
     public static void top5PeliculasPorIdioma(MyHashTable<Integer, Pelicula> peliculas,
                                               MyHashTable<Integer, Evaluacion> evaluaciones) {
