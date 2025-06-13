@@ -33,7 +33,10 @@ public class CargadorDatos {
 
                     String titulo = columnas[18].trim();
                     String idioma = columnas[7].trim();
-                    long ingresos = Long.parseLong(columnas[13].trim());
+                    long ingresos = 0;
+                    if(!columnas[13].isEmpty()) {
+                        ingresos = Long.parseLong(columnas[13].trim());
+                    }
 
                     Pelicula p = new Pelicula();
                     p.setId(id);
@@ -94,7 +97,8 @@ public class CargadorDatos {
 
                     peliculas.insertar(id, p);
 
-                } catch (Exception ignored) {}
+                } catch (Exception ignored) {
+                }
             }
 
         } catch (Exception ignored) {}
@@ -162,7 +166,6 @@ public class CargadorDatos {
                                 JSONObject obj = crewArray.getJSONObject(i);
                                 String job = obj.optString("job", "");
                                 if (!job.equalsIgnoreCase("Director")) continue;
-                                if (!obj.has("id")) continue;
 
                                 int idDirector = obj.getInt("id");
                                 String nombre = obj.optString("name", null);
