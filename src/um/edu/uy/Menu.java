@@ -1,4 +1,5 @@
-import um.edu.uy.UMovie;
+package um.edu.uy;
+
 import um.edu.uy.cargadordatos.CargadorDatos;
 import um.edu.uy.entities.*;
 import um.edu.uy.tads.hashtable.MyHashTable;
