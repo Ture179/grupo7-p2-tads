@@ -51,6 +51,16 @@ public class Main {
         System.out.println("Tiempo de ejecución de la consulta: " + (fin3 - inicio3) + " ms");
 
 
+        long inicio4 = System.currentTimeMillis();
+        app.actorMasVistoPorMes(evaluaciones, peliculas, actores);
+        long fin4 = System.currentTimeMillis();
+        System.out.println("Tiempo de ejecución de la consulta: " + (fin4 - inicio4) + " ms");
+
+
+        long inicio6 = System.currentTimeMillis();
+        app.topUsuariosPorGenero(evaluaciones, peliculas, generos);
+        long fin6 = System.currentTimeMillis();
+        System.out.println("Tiempo de ejecución de la consulta: " + (fin6 - inicio6) + " ms");
 
 
     }

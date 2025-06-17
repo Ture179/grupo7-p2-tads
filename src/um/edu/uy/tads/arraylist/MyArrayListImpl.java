@@ -80,5 +80,16 @@ public class MyArrayListImpl<T> implements MyArrayList<T> {
         }
         datos = nuevo;
     }
+
+    @Override
+    public boolean contains(T elemento) {
+        for (int i = 0; i < size; i++) {
+            if (get(i).equals(elemento)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 }
 

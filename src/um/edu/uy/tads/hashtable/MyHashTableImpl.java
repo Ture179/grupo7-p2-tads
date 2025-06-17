@@ -108,4 +108,16 @@ public class MyHashTableImpl<K,V> implements MyHashTable<K,V> {
         return elementos;
     }
 
+    @Override
+    public List<K> obtenerClaves() {
+        List<K> claves = new ArrayList<>();
+        for (MyList<Entrada<K, V>> bucket : tabla) {
+            for (int i = 0; i < bucket.size(); i++) {
+                claves.add(bucket.get(i).clave);
+            }
+        }
+        return claves;
+    }
+
+
 }

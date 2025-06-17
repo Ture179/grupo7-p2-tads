@@ -8,6 +8,9 @@ import um.edu.uy.tads.hashtable.MyHashTableImpl;
 import um.edu.uy.tads.linkedlist.MyLinkedListImpl;
 import um.edu.uy.tads.linkedlist.MyList;
 
+import java.util.Date;
+
+
 
 public class UMovie {
     private MyHashTable<Integer, Pelicula> peliculas;
@@ -61,7 +64,7 @@ public class UMovie {
             for (int i = 0; i < Math.min(5, lista.size()); i++) {
                 Pelicula p = lista.get(i);
                 int cantidad = conteo.obtener(p.getId()) != null ? conteo.obtener(p.getId()) : 0;
-                System.out.printf(" ▶️ ID: %d | Título: %s | Evaluaciones: %d | Idioma: %s\n", p.getId(), p.getTitulo(), cantidad, p.getIdomaOriginal());
+                System.out.printf("%d,%s,%d,%s\n", p.getId(), p.getTitulo(), cantidad, p.getIdomaOriginal());
             }
             System.out.println();
         }
@@ -116,7 +119,7 @@ public class UMovie {
         for (int i = 0; i < Math.min(10, lista.size()); i++) {
             Pelicula p = lista.get(i);
             double promedio = sumas.obtener(p.getId()) / conteos.obtener(p.getId());
-            System.out.printf(" ▶️ ID: %d | Título: %s | Calificación media: %.2f\n", p.getId(), p.getTitulo(), promedio);
+            System.out.printf("%d,%s,%.2f\n", p.getId(), p.getTitulo(), promedio);
         }
     }
 
@@ -167,28 +170,175 @@ public class UMovie {
         System.out.println("Top 5 colecciones con más ingresos:");
         for (int i = 0; i < Math.min(5, todas.size()); i++) {
             Coleccion c = todas.get(i);
-            System.out.println("ID: " + c.getId());
-            System.out.println("Nombre: " + c.getNombre());
-            System.out.println("Películas: " + c.getPeliculas().size());
-            System.out.print("IDs: ");
+            System.out.printf("%d,%s,%d,[", c.getId(), c.getNombre(), c.getPeliculas().size());
             for (int j = 0; j < c.getPeliculas().size(); j++) {
                 System.out.print(c.getPeliculas().get(j));
-                if (j < c.getPeliculas().size() - 1) System.out.print(", ");
+                if (j < c.getPeliculas().size() - 1) System.out.print(",");
             }
-            System.out.println();
-            System.out.println("Ingresos: " + c.getIngresos());
+            System.out.printf("],%d\n", c.getIngresos());
         }
     }
 
     public static void top10DirectorMejorCalificacion(MyHashTable<Integer, Pelicula> peliculas, MyHashTable<Integer, Evaluacion> evaluaciones, MyHashTable<Integer, Director> directores){
 
-
     }
 
-    
+
+    public static void actorMasVistoPorMes(MyHashTable<Integer, Evaluacion> evaluaciones,
+                                           MyHashTable<Integer, Pelicula> peliculas,
+                                           MyHashTable<Integer, Actor> actores) {
+
+        MyHashTable<String, Integer> conteoCalificaciones = new MyHashTableImpl<>();
+        MyHashTable<String, MyArrayList<Integer>> peliculasVistas = new MyHashTableImpl<>();
+
+        for (Evaluacion e : evaluaciones.obtenerElementos()) {
+            Date fecha = new Date(e.getFecha() * 1000L);
+            int mes = fecha.getMonth() + 1;
+
+            int idPelicula = e.getId_pelicula();
+            Pelicula p = peliculas.obtener(idPelicula);
+            if (p == null) continue;
+
+            MyList<Integer> actoresPelicula = p.getActores();
+
+            for (int i = 0; i < actoresPelicula.size(); i++) {
+                Integer idActor = actoresPelicula.get(i);
+                String clave = mes + "-" + idActor;
+
+                // Calificaciones
+                Integer actual = conteoCalificaciones.obtener(clave);
+                if (actual == null) {
+                    try {
+                        conteoCalificaciones.insertar(clave, 1);
+                    } catch (Exception ignored) {}
+                } else {
+                    try {
+                        conteoCalificaciones.borrar(clave);
+                        conteoCalificaciones.insertar(clave, actual + 1);
+                    } catch (Exception ignored) {}
+                }
+
+                // Películas únicas
+                MyArrayList<Integer> lista = peliculasVistas.obtener(clave);
+                if (lista == null) {
+                    lista = new MyArrayListImpl<>();
+                    try {
+                        peliculasVistas.insertar(clave, lista);
+                    } catch (Exception ignored) {}
+                }
+
+                if (!lista.contains(idPelicula)) {
+                    lista.agregar(idPelicula);
+                }
+            }
+        }
+
+        // Mostrar el actor más calificado por mes
+        for (int mes = 1; mes <= 12; mes++) {
+            int maxCalificaciones = -1;
+            String mejorClave = null;
+
+            for (String clave : conteoCalificaciones.obtenerClaves()) {
+                if (!clave.startsWith(mes + "-")) continue;
+
+                Integer cantidad = conteoCalificaciones.obtener(clave);
+                if (cantidad != null && cantidad > maxCalificaciones) {
+                    maxCalificaciones = cantidad;
+                    mejorClave = clave;
+                }
+            }
+
+            if (mejorClave != null) {
+                String[] partes = mejorClave.split("-");
+                int idActor = Integer.parseInt(partes[1]);
+                Actor actor = actores.obtener(idActor);
+                MyArrayList<Integer> pelis = peliculasVistas.obtener(mejorClave);
+                int cantidadPelis = pelis != null ? pelis.size() : 0;
+
+                System.out.printf("%d,%s,%d,%d\n", mes, actor.getNombre(), cantidadPelis, maxCalificaciones);
+            }
+        }
+    }
 
 
-    
+    public static void topUsuariosPorGenero(MyHashTable<Integer, Evaluacion> evaluaciones,
+                                            MyHashTable<Integer, Pelicula> peliculas,
+                                            MyHashTable<Integer, Genero> generos) {
+
+        MyHashTable<Integer, Integer> totalGenero = new MyHashTableImpl<>();
+        MyHashTable<String, Integer> usuarioGenero = new MyHashTableImpl<>();
+
+        // Paso 1: recorrer todas las evaluaciones
+        for (Evaluacion e : evaluaciones.obtenerElementos()) {
+            int idUsuario = e.getId_usuario();
+            int idPelicula = e.getId_pelicula();
+            Pelicula peli = peliculas.obtener(idPelicula);
+            if (peli == null) continue;
+
+            MyList<Integer> generosPelicula = peli.getGeneros();
+            for (int i = 0; i < generosPelicula.size(); i++) {
+                int idGenero = generosPelicula.get(i);
+
+                // contar popularidad del género
+                Integer total = totalGenero.obtener(idGenero);
+                if (total == null) {
+                    try { totalGenero.insertar(idGenero, 1); } catch (Exception ignored) {}
+                } else {
+                    try {
+                        totalGenero.borrar(idGenero);
+                        totalGenero.insertar(idGenero, total + 1);
+                    } catch (Exception ignored) {}
+                }
+
+                // contar evaluaciones por usuario y género
+                String clave = idUsuario + "-" + idGenero;
+                Integer cuenta = usuarioGenero.obtener(clave);
+                if (cuenta == null) {
+                    try { usuarioGenero.insertar(clave, 1); } catch (Exception ignored) {}
+                } else {
+                    try {
+                        usuarioGenero.borrar(clave);
+                        usuarioGenero.insertar(clave, cuenta + 1);
+                    } catch (Exception ignored) {}
+                }
+            }
+        }
+
+        // Paso 2: Obtener los top 10 géneros más evaluados
+        MyArrayList<Integer> listaGeneros = new MyArrayListImpl<>();
+        for (Integer idGenero : totalGenero.obtenerClaves()) {
+            listaGeneros.agregar(idGenero);
+        }
+
+        listaGeneros.sort((a, b) -> totalGenero.obtener(b) - totalGenero.obtener(a));
+        int limite = Math.min(10, listaGeneros.size());
+
+        // Paso 3: Para cada género top, buscar el usuario que más evaluó
+        System.out.println("Usuarios más activos por género (top 10 géneros):");
+        for (int i = 0; i < limite; i++) {
+            int idGenero = listaGeneros.get(i);
+            Genero g = generos.obtener(idGenero);
+            if (g == null) continue;
+
+            int max = -1;
+            int mejorUsuario = -1;
+
+            for (String clave : usuarioGenero.obtenerClaves()) {
+                if (clave.endsWith("-" + idGenero)) {
+                    String[] partes = clave.split("-");
+                    int idUsuario = Integer.parseInt(partes[0]);
+                    int cuenta = usuarioGenero.obtener(clave);
+                    if (cuenta > max) {
+                        max = cuenta;
+                        mejorUsuario = idUsuario;
+                    }
+                }
+            }
+
+            System.out.printf("%d,%s,%d\n", mejorUsuario, g.getNombre(), max);
+        }
+    }
+
 
 
     public MyHashTable<Integer, Pelicula> getPeliculas() {

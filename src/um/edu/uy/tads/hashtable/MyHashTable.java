@@ -17,4 +17,7 @@ public interface MyHashTable<K, V> {
     int size();
 
     List<V> obtenerElementos();
+
+    List<K> obtenerClaves();
+
 }

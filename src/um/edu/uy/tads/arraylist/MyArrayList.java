@@ -13,4 +13,6 @@ public interface MyArrayList<T> {
         boolean isEmpty();
 
         void sort(Comparator<T> comparador);
+
+        boolean contains(T elemento);
 }
