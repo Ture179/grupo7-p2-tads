@@ -77,16 +77,8 @@ public class Menu {
         System.out.println("7. Salir");
 
         String opcion = scanner.nextLine();
-        while(seguir)
+        while(seguir){
             if(opcion.equals("1")){
                 long inicio = System.currentTimeMillis();
-//                uMovie.top5PeliculasPorIdioma(peliculas, evaluaciones);
-
-
-            }
-
-
-    }
-
-
-}
+                uMovie.top5PeliculasPorIdioma(uMovie.getPeliculas(), uMovie.getEvaluaciones());
+     

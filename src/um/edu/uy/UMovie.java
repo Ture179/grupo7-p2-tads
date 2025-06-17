@@ -118,6 +118,15 @@ public class UMovie {
         }
     }
 
+    public static void top5ColeccionesMasIngresos(){
+
+    }
+
+    public static void top10DirectorMejorCalificacion(){}
+
+
+    
+
 
     public MyHashTable<Integer, Pelicula> getPeliculas() {
         return peliculas;
@@ -165,5 +174,13 @@ public class UMovie {
 
     public void setUsuarios(MyHashTable<Integer, Usuario> usuarios) {
         this.usuarios = usuarios;
+    }
+
+    public MyHashTable<Integer, Evaluacion> getEvaluaciones() {
+        return evaluaciones;
+    }
+
+    public void setEvaluaciones(MyHashTable<Integer, Evaluacion> evaluaciones) {
+        this.evaluaciones = evaluaciones;
     }
 }
