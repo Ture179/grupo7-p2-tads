@@ -122,7 +122,12 @@ public class UMovie {
 
     }
 
-    public static void top10DirectorMejorCalificacion(){}
+    public static void top10DirectorMejorCalificacion(MyHashTable<Integer, Pelicula> peliculas, MyHashTable<Integer, Evaluacion> evaluaciones, MyHashTable<Integer, Director> directores){
+
+
+    }
+
+    
 
 
     
