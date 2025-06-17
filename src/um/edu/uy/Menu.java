@@ -10,12 +10,12 @@ import java.util.Scanner;
 
 public class Menu {
 
-    public static void main(String args){
+    public static void main(String args) {
 
         Scanner scanner = new Scanner(System.in);
         UMovie uMovie = new UMovie();
 
-        while(true){
+        while (true) {
 
             System.out.println("Menú principal");
             System.out.println("\nSeleccione la opción que desee:");
@@ -25,7 +25,7 @@ public class Menu {
 
             String opcion = scanner.nextLine();
 
-            if(opcion.equals("1")){
+            if (opcion.equals("1")) {
                 long inicio = System.currentTimeMillis();
 
                 MyHashTable<Integer, Pelicula> peliculas = new MyHashTableImpl<>();
@@ -50,12 +50,12 @@ public class Menu {
                 System.out.println("Carga completa en " + (fin - inicio) + " ms");
             }
 
-            if(opcion.equals("2")){
+            if (opcion.equals("2")) {
 
 
             }
 
-            if(opcion.equals("3")){
+            if (opcion.equals("3")) {
                 return;
             }
 
@@ -64,7 +64,7 @@ public class Menu {
 
     }
 
-    public static void menuConsultas(Scanner scanner, UMovie uMovie){
+    public static void menuConsultas(Scanner scanner, UMovie uMovie) {
         boolean seguir = true;
 
         System.out.println("Menú principal");
@@ -77,8 +77,11 @@ public class Menu {
         System.out.println("7. Salir");
 
         String opcion = scanner.nextLine();
-        while(seguir){
-            if(opcion.equals("1")){
+        while (seguir) {
+            if (opcion.equals("1")) {
                 long inicio = System.currentTimeMillis();
                 uMovie.top5PeliculasPorIdioma(uMovie.getPeliculas(), uMovie.getEvaluaciones());
-     
+            }
+        }
+    }
+}

@@ -5,6 +5,8 @@ import um.edu.uy.tads.arraylist.MyArrayList;
 import um.edu.uy.tads.arraylist.MyArrayListImpl;
 import um.edu.uy.tads.hashtable.MyHashTable;
 import um.edu.uy.tads.hashtable.MyHashTableImpl;
+import um.edu.uy.tads.linkedlist.MyLinkedListImpl;
+import um.edu.uy.tads.linkedlist.MyList;
 
 
 public class UMovie {
@@ -118,8 +120,64 @@ public class UMovie {
         }
     }
 
-    public static void top5ColeccionesMasIngresos(){
 
+    public static void top5ColeccionesMasIngresos(MyHashTable<Integer, Pelicula> peliculas,
+                                                  MyHashTable<Integer, Coleccion> colecciones) {
+
+        MyArrayList<Coleccion> todas = new MyArrayListImpl<>();
+
+        // Clonar colecciones con ingresos calculados
+        for (Coleccion c : colecciones.obtenerElementos()) {
+            long ingresosTotales = 0;
+            MyList<Integer> ids = c.getPeliculas();
+            for (int i = 0; i < ids.size(); i++) {
+                Pelicula p = peliculas.obtener(ids.get(i));
+                if (p != null) {
+                    ingresosTotales += p.getIngresos();
+                }
+            }
+
+            Coleccion nueva = new Coleccion();
+            nueva.setId(c.getId());
+            nueva.setNombre(c.getNombre());
+            nueva.setPeliculas(ids);
+            nueva.setIngresos(ingresosTotales);
+
+            todas.agregar(nueva);
+        }
+
+        // Películas sin colección (colecciones individuales)
+        for (Pelicula p : peliculas.obtenerElementos()) {
+            if (p.getIdColeccion() == 0 || !colecciones.contieneClave(p.getIdColeccion())) {
+                Coleccion fake = new Coleccion();
+                fake.setId(p.getId()); // Se trata como colección propia
+                fake.setNombre(p.getTitulo());
+                MyList<Integer> unica = new MyLinkedListImpl<>();
+                unica.add(p.getId());
+                fake.setPeliculas(unica);
+                fake.setIngresos(p.getIngresos());
+                todas.agregar(fake);
+            }
+        }
+
+        // Ordenar por ingresos
+        todas.sort((a, b) -> Long.compare(b.getIngresos(), a.getIngresos()));
+
+        // Imprimir
+        System.out.println("Top 5 colecciones con más ingresos:");
+        for (int i = 0; i < Math.min(5, todas.size()); i++) {
+            Coleccion c = todas.get(i);
+            System.out.println("ID: " + c.getId());
+            System.out.println("Nombre: " + c.getNombre());
+            System.out.println("Películas: " + c.getPeliculas().size());
+            System.out.print("IDs: ");
+            for (int j = 0; j < c.getPeliculas().size(); j++) {
+                System.out.print(c.getPeliculas().get(j));
+                if (j < c.getPeliculas().size() - 1) System.out.print(", ");
+            }
+            System.out.println();
+            System.out.println("Ingresos: " + c.getIngresos());
+        }
     }
 
     public static void top10DirectorMejorCalificacion(MyHashTable<Integer, Pelicula> peliculas, MyHashTable<Integer, Evaluacion> evaluaciones, MyHashTable<Integer, Director> directores){

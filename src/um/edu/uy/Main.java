@@ -45,6 +45,10 @@ public class Main {
         System.out.println("Tiempo de ejecución de la consulta: " + (fin2 - inicio2) + " ms");
 
 
+        long inicio3 = System.currentTimeMillis();
+        app.top5ColeccionesMasIngresos(peliculas, colecciones);
+        long fin3 = System.currentTimeMillis();
+        System.out.println("Tiempo de ejecución de la consulta: " + (fin3 - inicio3) + " ms");
 
 
 

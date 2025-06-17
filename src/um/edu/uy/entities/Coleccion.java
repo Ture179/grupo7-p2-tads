@@ -9,6 +9,7 @@ public class Coleccion {
     private int id;
     private String nombre;
     private MyList<Integer> peliculas;
+    private long ingresos;
 
     public Coleccion(int id, String nombre, MyList<Integer> peliculas) {
         this.id = id;
@@ -32,6 +33,10 @@ public class Coleccion {
         return nombre;
     }
 
+    public long getIngresos() {
+        return ingresos;
+    }
+
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
@@ -42,6 +47,10 @@ public class Coleccion {
 
     public void setPeliculas(MyList<Integer> peliculas) {
         this.peliculas = peliculas;
+    }
+
+    public void setIngresos(long ingresos) {
+        this.ingresos = ingresos;
     }
 
     @Override
