@@ -27,7 +27,6 @@ public class UMovie {
         String[] idiomas = {"en", "fr", "it", "es", "pt"};
         MyHashTable<Integer, Integer> conteo = new MyHashTableImpl<>();
 
-        // Contar evaluaciones por ID de película
         for (Evaluacion e : evaluaciones.obtenerElementos()) {
             int idPelicula = e.getId_pelicula();
             Integer actual = conteo.obtener(idPelicula);
@@ -43,7 +42,6 @@ public class UMovie {
             }
         }
 
-        // Para cada idioma: obtener y mostrar top 5
         for (String idioma : idiomas) {
             MyArrayList<Pelicula> lista = new MyArrayListImpl<>();
 
@@ -53,7 +51,6 @@ public class UMovie {
                 }
             }
 
-            // Ordenar por cantidad de evaluaciones (desc)
             lista.sort((a, b) -> {
                 int evalA = conteo.obtener(a.getId()) != null ? conteo.obtener(a.getId()) : 0;
                 int evalB = conteo.obtener(b.getId()) != null ? conteo.obtener(b.getId()) : 0;
@@ -77,7 +74,6 @@ public class UMovie {
         MyHashTable<Integer, Double> sumas = new MyHashTableImpl<>();
         MyHashTable<Integer, Integer> conteos = new MyHashTableImpl<>();
 
-        // Acumular sumas y conteos
         for (Evaluacion e : evaluaciones.obtenerElementos()) {
             int idPelicula = e.getId_pelicula();
             double puntaje = e.getPuntaje();
@@ -98,7 +94,6 @@ public class UMovie {
             } catch (Exception ignored) {}
         }
 
-        // Crear lista de películas que tienen evaluaciones
         MyArrayList<Pelicula> lista = new MyArrayListImpl<>();
         for (Pelicula p : peliculas.obtenerElementos()) {
             int id = p.getId();
@@ -107,14 +102,12 @@ public class UMovie {
             }
         }
 
-        // Ordenar por promedio descendente
         lista.sort((a, b) -> {
             double promA = sumas.obtener(a.getId()) / conteos.obtener(a.getId());
             double promB = sumas.obtener(b.getId()) / conteos.obtener(b.getId());
             return Double.compare(promB, promA);
         });
 
-        // Imprimir top 10
         System.out.println("Top 10 películas con mejor calificación media:");
         for (int i = 0; i < Math.min(10, lista.size()); i++) {
             Pelicula p = lista.get(i);
@@ -129,7 +122,6 @@ public class UMovie {
 
         MyArrayList<Coleccion> todas = new MyArrayListImpl<>();
 
-        // Clonar colecciones con ingresos calculados
         for (Coleccion c : colecciones.obtenerElementos()) {
             long ingresosTotales = 0;
             MyList<Integer> ids = c.getPeliculas();
@@ -149,11 +141,10 @@ public class UMovie {
             todas.agregar(nueva);
         }
 
-        // Películas sin colección (colecciones individuales)
         for (Pelicula p : peliculas.obtenerElementos()) {
             if (p.getIdColeccion() == 0 || !colecciones.contieneClave(p.getIdColeccion())) {
                 Coleccion fake = new Coleccion();
-                fake.setId(p.getId()); // Se trata como colección propia
+                fake.setId(p.getId());
                 fake.setNombre(p.getTitulo());
                 MyList<Integer> unica = new MyLinkedListImpl<>();
                 unica.add(p.getId());
@@ -163,10 +154,8 @@ public class UMovie {
             }
         }
 
-        // Ordenar por ingresos
         todas.sort((a, b) -> Long.compare(b.getIngresos(), a.getIngresos()));
 
-        // Imprimir
         System.out.println("Top 5 colecciones con más ingresos:");
         for (int i = 0; i < Math.min(5, todas.size()); i++) {
             Coleccion c = todas.get(i);
@@ -179,10 +168,59 @@ public class UMovie {
         }
     }
 
-    public static void top10DirectorMejorCalificacion(MyHashTable<Integer, Pelicula> peliculas, MyHashTable<Integer, Evaluacion> evaluaciones, MyHashTable<Integer, Director> directores){
+    public static void top10DirectorMejorCalificacion(
+            MyHashTable<Integer, Pelicula> peliculas,
+            MyHashTable<Integer, Evaluacion> evaluaciones,
+            MyHashTable<Integer, Director> directores) {
 
+        MyHashTable<Integer, Double> sumas = new MyHashTableImpl<>();
+        MyHashTable<Integer, Integer> conteos = new MyHashTableImpl<>();
+
+        for (Evaluacion e : evaluaciones.obtenerElementos()) {
+            int idPelicula = e.getId_pelicula();
+            Pelicula peli = peliculas.obtener(idPelicula);
+            if (peli == null) continue;
+
+            int idDirector = peli.getIdDirector();
+            if (!directores.contieneClave(idDirector)) continue;
+
+            double puntaje = e.getPuntaje();
+
+            Double sumaActual = sumas.obtener(idDirector);
+            Integer conteoActual = conteos.obtener(idDirector);
+
+            try {
+                if (sumaActual == null) {
+                    sumas.insertar(idDirector, puntaje);
+                    conteos.insertar(idDirector, 1);
+                } else {
+                    sumas.borrar(idDirector);
+                    conteos.borrar(idDirector);
+                    sumas.insertar(idDirector, sumaActual + puntaje);
+                    conteos.insertar(idDirector, conteoActual + 1);
+                }
+            } catch (Exception ignored) {}
+        }
+
+        MyArrayList<Integer> listaIds = new MyArrayListImpl<>();
+        for (Integer idDirector : sumas.obtenerClaves()) {
+            listaIds.agregar(idDirector);
+        }
+
+        listaIds.sort((a, b) -> {
+            double promA = sumas.obtener(a) / conteos.obtener(a);
+            double promB = sumas.obtener(b) / conteos.obtener(b);
+            return Double.compare(promB, promA);
+        });
+
+        int limite = Math.min(10, listaIds.size());
+        for (int i = 0; i < limite; i++) {
+            int id = listaIds.get(i);
+            Director d = directores.obtener(id);
+            double promedio = sumas.obtener(id) / conteos.obtener(id);
+            System.out.printf("%d,%s,%.2f\n", id, d.getNombre(), promedio);
+        }
     }
-
 
     public static void actorMasVistoPorMes(MyHashTable<Integer, Evaluacion> evaluaciones,
                                            MyHashTable<Integer, Pelicula> peliculas,
@@ -205,7 +243,6 @@ public class UMovie {
                 Integer idActor = actoresPelicula.get(i);
                 String clave = mes + "-" + idActor;
 
-                // Calificaciones
                 Integer actual = conteoCalificaciones.obtener(clave);
                 if (actual == null) {
                     try {
@@ -218,7 +255,6 @@ public class UMovie {
                     } catch (Exception ignored) {}
                 }
 
-                // Películas únicas
                 MyArrayList<Integer> lista = peliculasVistas.obtener(clave);
                 if (lista == null) {
                     lista = new MyArrayListImpl<>();
@@ -233,7 +269,6 @@ public class UMovie {
             }
         }
 
-        // Mostrar el actor más calificado por mes
         for (int mes = 1; mes <= 12; mes++) {
             int maxCalificaciones = -1;
             String mejorClave = null;
@@ -260,7 +295,6 @@ public class UMovie {
         }
     }
 
-
     public static void topUsuariosPorGenero(MyHashTable<Integer, Evaluacion> evaluaciones,
                                             MyHashTable<Integer, Pelicula> peliculas,
                                             MyHashTable<Integer, Genero> generos) {
@@ -268,7 +302,6 @@ public class UMovie {
         MyHashTable<Integer, Integer> totalGenero = new MyHashTableImpl<>();
         MyHashTable<String, Integer> usuarioGenero = new MyHashTableImpl<>();
 
-        // Paso 1: recorrer todas las evaluaciones
         for (Evaluacion e : evaluaciones.obtenerElementos()) {
             int idUsuario = e.getId_usuario();
             int idPelicula = e.getId_pelicula();
@@ -279,7 +312,6 @@ public class UMovie {
             for (int i = 0; i < generosPelicula.size(); i++) {
                 int idGenero = generosPelicula.get(i);
 
-                // contar popularidad del género
                 Integer total = totalGenero.obtener(idGenero);
                 if (total == null) {
                     try { totalGenero.insertar(idGenero, 1); } catch (Exception ignored) {}
@@ -290,7 +322,6 @@ public class UMovie {
                     } catch (Exception ignored) {}
                 }
 
-                // contar evaluaciones por usuario y género
                 String clave = idUsuario + "-" + idGenero;
                 Integer cuenta = usuarioGenero.obtener(clave);
                 if (cuenta == null) {
@@ -304,7 +335,6 @@ public class UMovie {
             }
         }
 
-        // Paso 2: Obtener los top 10 géneros más evaluados
         MyArrayList<Integer> listaGeneros = new MyArrayListImpl<>();
         for (Integer idGenero : totalGenero.obtenerClaves()) {
             listaGeneros.agregar(idGenero);
@@ -313,7 +343,6 @@ public class UMovie {
         listaGeneros.sort((a, b) -> totalGenero.obtener(b) - totalGenero.obtener(a));
         int limite = Math.min(10, listaGeneros.size());
 
-        // Paso 3: Para cada género top, buscar el usuario que más evaluó
         System.out.println("Usuarios más activos por género (top 10 géneros):");
         for (int i = 0; i < limite; i++) {
             int idGenero = listaGeneros.get(i);

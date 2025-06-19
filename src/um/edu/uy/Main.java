@@ -31,7 +31,6 @@ public class Main {
         long fin = System.currentTimeMillis();
         System.out.println("Carga completa de los datos en " + (fin - inicio) + " ms");
 
-
         UMovie app = new UMovie();
 
         long inicio1 = System.currentTimeMillis();
@@ -50,11 +49,15 @@ public class Main {
         long fin3 = System.currentTimeMillis();
         System.out.println("Tiempo de ejecución de la consulta: " + (fin3 - inicio3) + " ms");
 
-
         long inicio4 = System.currentTimeMillis();
-        app.actorMasVistoPorMes(evaluaciones, peliculas, actores);
+        app.top10DirectorMejorCalificacion(peliculas, evaluaciones, directores);
         long fin4 = System.currentTimeMillis();
         System.out.println("Tiempo de ejecución de la consulta: " + (fin4 - inicio4) + " ms");
+
+        long inicio5 = System.currentTimeMillis();
+        app.actorMasVistoPorMes(evaluaciones, peliculas, actores);
+        long fin5 = System.currentTimeMillis();
+        System.out.println("Tiempo de ejecución de la consulta: " + (fin5 - inicio5) + " ms");
 
 
         long inicio6 = System.currentTimeMillis();
