@@ -97,7 +97,7 @@ public class UMovie {
         MyArrayList<Pelicula> lista = new MyArrayListImpl<>();
         for (Pelicula p : peliculas.obtenerElementos()) {
             int id = p.getId();
-            if (sumas.contieneClave(id) && conteos.contieneClave(id)) {
+            if (sumas.contieneClave(id) && conteos.contieneClave(id) && conteos.obtener(id) > 100) {
                 lista.agregar(p);
             }
         }
