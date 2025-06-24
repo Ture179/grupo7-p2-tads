@@ -224,23 +224,6 @@ public class CargadorDatos {
         } catch (Exception ignored) {}
     }
 
-    public void imprimirResumen(MyHashTable<Integer, Pelicula> peliculas,
-                                MyHashTable<Integer, Genero> generos,
-                                MyHashTable<Integer, Coleccion> colecciones,
-                                MyHashTable<Integer, Actor> actores,
-                                MyHashTable<Integer, Director> directores,
-                                MyHashTable<Integer, Evaluacion> evaluaciones,
-                                MyHashTable<Integer, Usuario> usuarios) {
-
-        System.out.println("Películas cargadas: " + peliculas.size());
-        System.out.println("Géneros diferentes: " + generos.size());
-        System.out.println("Colecciones diferentes: " + colecciones.size());
-        System.out.println("Actores diferentes: " + actores.size());
-        System.out.println("Directores diferentes: " + directores.size());
-        System.out.println("Evaluaciones cargadas: " + evaluaciones.size());
-        System.out.println("Usuarios únicos: " + usuarios.size());
-    }
-
     private String sanitizeJson(String raw) {
         return raw
                 .replaceAll("(?<=\\{|,|\\[)\\s*'([^']+?)'\\s*:", "\"$1\":")
