@@ -173,8 +173,8 @@ public class UMovie {
             MyHashTable<Integer, Evaluacion> evaluaciones,
             MyHashTable<Integer, Director> directores) {
 
-        MyHashTable<Integer, Double> sumas = new MyHashTableImpl<>();
-        MyHashTable<Integer, Integer> conteos = new MyHashTableImpl<>();
+        MyHashTable<Integer, MyArrayList<Double>> puntajesPorDirector = new MyHashTableImpl<>();
+        MyHashTable<Integer, MyArrayList<Integer>> peliculasPorDirector = new MyHashTableImpl<>();
 
         for (Evaluacion e : evaluaciones.obtenerElementos()) {
             int idPelicula = e.getId_pelicula();
@@ -184,41 +184,68 @@ public class UMovie {
             int idDirector = peli.getIdDirector();
             if (!directores.contieneClave(idDirector)) continue;
 
-            double puntaje = e.getPuntaje();
+            MyArrayList<Double> listaPuntajes = puntajesPorDirector.obtener(idDirector);
+            if(listaPuntajes == null){
+                listaPuntajes = new MyArrayListImpl<>();
+                try{puntajesPorDirector.insertar(idDirector, listaPuntajes);}
+                catch (Exception ignored){};
+            }
+            listaPuntajes.agregar(e.getPuntaje());
 
-            Double sumaActual = sumas.obtener(idDirector);
-            Integer conteoActual = conteos.obtener(idDirector);
+            MyArrayList<Integer> listaPeliculas = peliculasPorDirector.obtener(idDirector);
+            if (listaPeliculas == null) {
+                listaPeliculas = new MyArrayListImpl<>();
+                try { peliculasPorDirector.insertar(idDirector, listaPeliculas); } catch (Exception ignored) {}
+            }
 
-            try {
-                if (sumaActual == null) {
-                    sumas.insertar(idDirector, puntaje);
-                    conteos.insertar(idDirector, 1);
-                } else {
-                    sumas.borrar(idDirector);
-                    conteos.borrar(idDirector);
-                    sumas.insertar(idDirector, sumaActual + puntaje);
-                    conteos.insertar(idDirector, conteoActual + 1);
+            boolean yaAgregada = false;
+            for (int i = 0; i < listaPeliculas.size(); i++) {
+                if (listaPeliculas.get(i).equals(idPelicula)) {
+                    yaAgregada = true;
+                    break;
                 }
-            } catch (Exception ignored) {}
+            }
+
+            if (!yaAgregada) {
+                listaPeliculas.agregar(idPelicula);
+            }
         }
 
-        MyArrayList<Integer> listaIds = new MyArrayListImpl<>();
-        for (Integer idDirector : sumas.obtenerClaves()) {
-            listaIds.agregar(idDirector);
+        MyArrayList<Integer> idsValidos = new MyArrayListImpl<>();
+        MyHashTable<Integer, Double> medianas = new MyHashTableImpl<>();
+
+        for (Integer idDirector : puntajesPorDirector.obtenerClaves()) {
+            MyArrayList<Double> lista = puntajesPorDirector.obtener(idDirector);
+            MyArrayList<Integer> pelis = peliculasPorDirector.obtener(idDirector);
+
+            if (lista.size() > 100 && pelis != null && pelis.size() > 1) {
+                lista.sort((a, b) -> Double.compare(a, b));
+                double mediana;
+                int n = lista.size();
+                if (n % 2 == 0) {
+                    mediana = (lista.get(n / 2 - 1) + lista.get(n / 2)) / 2.0;
+                } else {
+                    mediana = lista.get(n / 2);
+                }
+
+                try {
+                    medianas.insertar(idDirector, mediana);
+                    idsValidos.agregar(idDirector);
+                } catch (Exception ignored) {}
+            }
         }
 
-        listaIds.sort((a, b) -> {
-            double promA = sumas.obtener(a) / conteos.obtener(a);
-            double promB = sumas.obtener(b) / conteos.obtener(b);
-            return Double.compare(promB, promA);
-        });
+        // Ordenar por mediana
+        idsValidos.sort((a, b) -> Double.compare(medianas.obtener(b), medianas.obtener(a)));
 
-        int limite = Math.min(10, listaIds.size());
-        for (int i = 0; i < limite; i++) {
-            int id = listaIds.get(i);
+        // Mostrar resultados
+        System.out.println("Top 10 directores con mejor calificación (por mediana):");
+        for (int i = 0; i < Math.min(10, idsValidos.size()); i++) {
+            int id = idsValidos.get(i);
             Director d = directores.obtener(id);
-            double promedio = sumas.obtener(id) / conteos.obtener(id);
-            System.out.printf("%d,%s,%.2f\n", id, d.getNombre(), promedio);
+            double mediana = medianas.obtener(id);
+            int cantPelis = peliculasPorDirector.obtener(id).size();
+            System.out.printf("%s,%d,%.2f\n", d.getNombre(), cantPelis, mediana);
         }
     }
 
