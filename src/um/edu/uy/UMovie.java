@@ -57,7 +57,6 @@ public class UMovie {
                 return Integer.compare(evalB, evalA);
             });
 
-            System.out.println("Top 5 películas en idioma: " + idioma.toUpperCase());
             for (int i = 0; i < Math.min(5, lista.size()); i++) {
                 Pelicula p = lista.get(i);
                 int cantidad = conteo.obtener(p.getId()) != null ? conteo.obtener(p.getId()) : 0;
@@ -108,7 +107,6 @@ public class UMovie {
             return Double.compare(promB, promA);
         });
 
-        System.out.println("Top 10 películas con mejor calificación media:");
         for (int i = 0; i < Math.min(10, lista.size()); i++) {
             Pelicula p = lista.get(i);
             double promedio = sumas.obtener(p.getId()) / conteos.obtener(p.getId());
@@ -120,51 +118,53 @@ public class UMovie {
     public static void top5ColeccionesMasIngresos(MyHashTable<Integer, Pelicula> peliculas,
                                                   MyHashTable<Integer, Coleccion> colecciones) {
 
-        MyArrayList<Coleccion> todas = new MyArrayListImpl<>();
+        MyArrayList<Coleccion> coleccionesProcesadas = new MyArrayListImpl<>();
 
-        for (Coleccion c : colecciones.obtenerElementos()) {
+        for (Coleccion coleccion : colecciones.obtenerElementos()) {
             long ingresosTotales = 0;
-            MyList<Integer> ids = c.getPeliculas();
-            for (int i = 0; i < ids.size(); i++) {
-                Pelicula p = peliculas.obtener(ids.get(i));
-                if (p != null) {
-                    ingresosTotales += p.getIngresos();
+            MyList<Integer> idsPeliculas = coleccion.getPeliculas();
+
+            for (int i = 0; i < idsPeliculas.size(); i++) {
+                Pelicula pelicula = peliculas.obtener(idsPeliculas.get(i));
+                if (pelicula != null) {
+                    ingresosTotales += pelicula.getIngresos();
                 }
             }
 
-            Coleccion nueva = new Coleccion();
-            nueva.setId(c.getId());
-            nueva.setNombre(c.getNombre());
-            nueva.setPeliculas(ids);
-            nueva.setIngresos(ingresosTotales);
+            Coleccion nuevaColeccion = new Coleccion();
+            nuevaColeccion.setId(coleccion.getId());
+            nuevaColeccion.setNombre(coleccion.getNombre());
+            nuevaColeccion.setPeliculas(idsPeliculas);
+            nuevaColeccion.setIngresos(ingresosTotales);
 
-            todas.agregar(nueva);
+            coleccionesProcesadas.agregar(nuevaColeccion);
         }
 
-        for (Pelicula p : peliculas.obtenerElementos()) {
-            if (p.getIdColeccion() == 0 || !colecciones.contieneClave(p.getIdColeccion())) {
-                Coleccion fake = new Coleccion();
-                fake.setId(p.getId());
-                fake.setNombre(p.getTitulo());
-                MyList<Integer> unica = new MyLinkedListImpl<>();
-                unica.add(p.getId());
-                fake.setPeliculas(unica);
-                fake.setIngresos(p.getIngresos());
-                todas.agregar(fake);
+        for (Pelicula pelicula : peliculas.obtenerElementos()) {
+            if (pelicula.getIdColeccion() == 0 || !colecciones.contieneClave(pelicula.getIdColeccion())) {
+                Coleccion coleccionIndividual = new Coleccion();
+                coleccionIndividual.setId(pelicula.getId());
+                coleccionIndividual.setNombre(pelicula.getTitulo());
+
+                MyList<Integer> listaUnica = new MyLinkedListImpl<>();
+                listaUnica.add(pelicula.getId());
+                coleccionIndividual.setPeliculas(listaUnica);
+                coleccionIndividual.setIngresos(pelicula.getIngresos());
+
+                coleccionesProcesadas.agregar(coleccionIndividual);
             }
         }
 
-        todas.sort((a, b) -> Long.compare(b.getIngresos(), a.getIngresos()));
+        coleccionesProcesadas.sort((a, b) -> Long.compare(b.getIngresos(), a.getIngresos()));
 
-        System.out.println("Top 5 colecciones con más ingresos:");
-        for (int i = 0; i < Math.min(5, todas.size()); i++) {
-            Coleccion c = todas.get(i);
-            System.out.printf("%d,%s,%d,[", c.getId(), c.getNombre(), c.getPeliculas().size());
-            for (int j = 0; j < c.getPeliculas().size(); j++) {
-                System.out.print(c.getPeliculas().get(j));
-                if (j < c.getPeliculas().size() - 1) System.out.print(",");
+        for (int i = 0; i < Math.min(5, coleccionesProcesadas.size()); i++) {
+            Coleccion coleccion = coleccionesProcesadas.get(i);
+            System.out.printf("%d,%s,%d,[", coleccion.getId(), coleccion.getNombre(), coleccion.getPeliculas().size());
+            for (int j = 0; j < coleccion.getPeliculas().size(); j++) {
+                System.out.print(coleccion.getPeliculas().get(j));
+                if (j < coleccion.getPeliculas().size() - 1) System.out.print(",");
             }
-            System.out.printf("],%d\n", c.getIngresos());
+            System.out.printf("],%d\n", coleccion.getIngresos());
         }
     }
 
@@ -235,11 +235,8 @@ public class UMovie {
             }
         }
 
-        // Ordenar por mediana
         idsValidos.sort((a, b) -> Double.compare(medianas.obtener(b), medianas.obtener(a)));
 
-        // Mostrar resultados
-        System.out.println("Top 10 directores con mejor calificación (por mediana):");
         for (int i = 0; i < Math.min(10, idsValidos.size()); i++) {
             int id = idsValidos.get(i);
             Director d = directores.obtener(id);
@@ -370,7 +367,6 @@ public class UMovie {
         listaGeneros.sort((a, b) -> totalGenero.obtener(b) - totalGenero.obtener(a));
         int limite = Math.min(10, listaGeneros.size());
 
-        System.out.println("Usuarios más activos por género (top 10 géneros):");
         for (int i = 0; i < limite; i++) {
             int idGenero = listaGeneros.get(i);
             Genero g = generos.obtener(idGenero);
