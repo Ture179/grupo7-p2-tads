@@ -91,41 +91,41 @@ public class Menu {
             String opcion = scanner.nextLine();
             if (opcion.equals("1")) {
                 long inicio1 = System.currentTimeMillis();
-                uMovie.top5PeliculasPorIdioma(uMovie.getPeliculas(), uMovie.getEvaluaciones());
+                UMovie.top5PeliculasPorIdioma(uMovie.getPeliculas(), uMovie.getEvaluaciones());
                 long fin1 = System.currentTimeMillis();
                 System.out.println("Tiempo de ejecución de la consulta: " + (fin1 - inicio1) + " ms");
             }
             else if(opcion.equals("2")){
                 long inicio2 = System.currentTimeMillis();
-                uMovie.top10MejorCalificacionMedia(uMovie.getPeliculas(), uMovie.getEvaluaciones());
+                UMovie.top10MejorCalificacionMedia(uMovie.getPeliculas(), uMovie.getEvaluaciones());
                 long fin2 = System.currentTimeMillis();
                 System.out.println("Tiempo de ejecución de la consulta: " + (fin2 - inicio2) + "ms");
             }
 
             else if(opcion.equals("3")){
                 long inicio3 = System.currentTimeMillis();
-                uMovie.top5ColeccionesMasIngresos(uMovie.getPeliculas(), uMovie.getColecciones());
+                UMovie.top5ColeccionesMasIngresos(uMovie.getPeliculas(), uMovie.getColecciones());
                 long fin3 = System.currentTimeMillis();
                 System.out.println("Tiempo de ejecución de la consulta: " + (fin3 - inicio3) + "ms");
             }
 
             else if(opcion.equals("4")){
                 long inicio4 = System.currentTimeMillis();
-                uMovie.top10DirectorMejorCalificacion(uMovie.getPeliculas(), uMovie.getEvaluaciones(), uMovie.getDirectores());
+                UMovie.top10DirectorMejorCalificacion(uMovie.getPeliculas(), uMovie.getEvaluaciones(), uMovie.getDirectores());
                 long fin4= System.currentTimeMillis();
                 System.out.println("Tiempo de ejecución de la consulta: " + (fin4 - inicio4) + "ms");
             }
 
             else if(opcion.equals("5")){
                 long inicio5 = System.currentTimeMillis();
-                uMovie.actorMasVistoPorMes(uMovie.getEvaluaciones(), uMovie.getPeliculas(), uMovie.getActores());
+                UMovie.actorMasVistoPorMes(uMovie.getEvaluaciones(), uMovie.getPeliculas(), uMovie.getActores());
                 long fin5 = System.currentTimeMillis();
                 System.out.println("Tiempo de ejecución de la consulta: " + (fin5 - inicio5) + "ms");
             }
 
             else if(opcion.equals("6")){
                 long inicio6 = System.currentTimeMillis();
-                uMovie.topUsuariosPorGenero(uMovie.getEvaluaciones(), uMovie.getPeliculas(), uMovie.getGeneros());
+                UMovie.topUsuariosPorGenero(uMovie.getEvaluaciones(), uMovie.getPeliculas(), uMovie.getGeneros());
                 long fin6 = System.currentTimeMillis();
                 System.out.println("Tiempo de ejecución de la consulta: " + (fin6 - inicio6) + "ms");
             }
