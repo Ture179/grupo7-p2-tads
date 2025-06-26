@@ -8,16 +8,13 @@ import java.util.Objects;
 public class Genero {
     private int id;
     private String nombre;
-    private MyList<Integer> peliculas;
 
-    public Genero(int id, String nombre, MyList<Integer> peliculas) {
+    public Genero(int id, String nombre) {
         this.id = id;
         this.nombre = nombre;
-        this.peliculas = peliculas;
     }
 
     public Genero() {
-        this.peliculas = new MyLinkedListImpl<>();
     }
 
     public int getId() {
@@ -36,13 +33,7 @@ public class Genero {
         this.nombre = nombre;
     }
 
-    public MyList<Integer> getPeliculas() {
-        return peliculas;
-    }
 
-    public void setPeliculas(MyList<Integer> peliculas) {
-        this.peliculas = peliculas;
-    }
 
     @Override
     public boolean equals(Object o) {
@@ -56,9 +47,5 @@ public class Genero {
         return Objects.hashCode(id);
     }
 
-    public void agregarPelicula(Integer pelicula) {
-        if (pelicula != null && !peliculas.contains(pelicula)) {
-            peliculas.add(pelicula);
-        }
-    }
+
 }

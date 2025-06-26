@@ -56,10 +56,9 @@ public class CargadorDatos {
 
                                 Genero g = generos.obtener(idGenero);
                                 if (g == null) {
-                                    g = new Genero(idGenero, nombre, new MyLinkedListImpl<>());
+                                    g = new Genero(idGenero, nombre);
                                     generos.insertar(idGenero, g);
                                 }
-                                g.agregarPelicula(id);
                                 p.agregarGeneros(idGenero);
                             }
                         }
